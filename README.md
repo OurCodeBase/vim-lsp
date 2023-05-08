@@ -7,7 +7,7 @@ Async [Language Server Protocol](https://github.com/Microsoft/language-server-pr
 Install [vim-plug](https://github.com/junegunn/vim-plug) and then:
 
 ```viml
-Plug 'prabirshrestha/vim-lsp'
+Plug 'OurCodeBase/vim-lsp'
 ```
 
 __Performance__
@@ -15,9 +15,9 @@ __Performance__
 Certain bottlenecks in Vim script have been implemented in lua. If you would like to take advantage of these performance gains
 use vim compiled with lua or neovim v0.4.0+
 
-## Registering servers
+## LanguageServers
 
-```viml
+```vim
 if executable('pylsp')
     " pip install python-lsp-server
     au User lsp_setup call lsp#register_server({
@@ -26,12 +26,14 @@ if executable('pylsp')
         \ 'allowlist': ['python'],
         \ })
 endif
+```
 
+```vim
 function! s:on_lsp_buffer_enabled() abort
     setlocal omnifunc=lsp#complete
     setlocal signcolumn=yes
     if exists('+tagfunc') | setlocal tagfunc=lsp#tagfunc | endif
-    nmap <buffer> gd <plug>(lsp-definition)
+    nmap <buffer> <cr> <plug>(lsp-definition)
     nmap <buffer> gs <plug>(lsp-document-symbol-search)
     nmap <buffer> gS <plug>(lsp-workspace-symbol-search)
     nmap <buffer> gr <plug>(lsp-references)
@@ -40,7 +42,7 @@ function! s:on_lsp_buffer_enabled() abort
     nmap <buffer> <leader>rn <plug>(lsp-rename)
     nmap <buffer> [g <plug>(lsp-previous-diagnostic)
     nmap <buffer> ]g <plug>(lsp-next-diagnostic)
-    nmap <buffer> K <plug>(lsp-hover)
+    nmap <buffer> <cr> <plug>(lsp-hover)
     nnoremap <buffer> <expr><c-f> lsp#scroll(+4)
     nnoremap <buffer> <expr><c-d> lsp#scroll(-4)
 
@@ -60,7 +62,7 @@ augroup END
 Refer to [vim-lsp-settings](https://github.com/mattn/vim-lsp-settings) on how to easily setup language servers using vim-lsp automatically.
 
 ```viml
-Plug 'prabirshrestha/vim-lsp'
+Plug 'OurCodeBase/vim-lsp'
 Plug 'mattn/vim-lsp-settings'
 ```
 
@@ -72,28 +74,19 @@ Refer to docs on configuring omnifunc or [asyncomplete.vim](https://github.com/p
 vim-lsp does not support snippets by default. If you want snippet integration, you will first have to install a third-party snippet plugin and a plugin that integrates it in vim-lsp.
 At the moment, you have following options:
 1. [vim-vsnip](https://github.com/hrsh7th/vim-vsnip) together with [vim-vsnip-integ](https://github.com/hrsh7th/vim-vsnip-integ)
-2. [UltiSnips](https://github.com/SirVer/ultisnips) together with [vim-lsp-ultisnips](https://github.com/thomasfaingnaert/vim-lsp-ultisnips)
-3. [neosnippet.vim](https://github.com/Shougo/neosnippet.vim) together with [vim-lsp-neosnippet](https://github.com/thomasfaingnaert/vim-lsp-neosnippet)
+```vim
+Plug 'hrsh7th/vim-vsnip'
+Plug 'hrsh7th/vim-vsnip-integ'
+Plug 'OurCodeBase/friendly-snippets'
+```
+
+```vim
+" Snippets Settings
+imap <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
+smap <expr> <Tab>   vsnip#jumpable(1)   ? '<Plug>(vsnip-jump-next)'      : '<Tab>'
+```
 
 For more information, refer to the readme and documentation of the respective plugins.
-
-## Folding
-
-You can let the language server automatically handle folding for you. To enable this, you have to set `'foldmethod'`, `'foldexpr'` and (optionally) `'foldtext'`:
-
-```vim
-set foldmethod=expr
-  \ foldexpr=lsp#ui#vim#folding#foldexpr()
-  \ foldtext=lsp#ui#vim#folding#foldtext()
-```
-
-If you would like to disable folding globally, you can add this to your configuration:
-
-```vim
-let g:lsp_fold_enabled = 0
-```
-
-Also see `:h vim-lsp-folding`.
 
 ## Semantic highlighting
 vim-lsp supports the unofficial extension to the LSP protocol for semantic highlighting (https://github.com/microsoft/vscode-languageserver-node/pull/367).
@@ -195,53 +188,3 @@ CheckHealth
 [vim-themis](https://github.com/thinca/vim-themis) is used for testing. To run
 integration tests [gopls](https://github.com/golang/tools/tree/master/gopls)
 executable must be in path.
-
-## Maintainers
-
-- [Prabir Shrestha](https://github.com/prabirshrestha) (author, maintainer)
-- [mattn](https://github.com/mattn) (maintainer)
-- [hrsh7th](https://github.com/hrsh7th) (maintainer)
-- [Thomas Faingnaert](https://github.com/thomasfaingnaert) (maintainer)
-- [rhysd](https://github.com/rhysd) (maintainer)
-
-## Backers
-
-Support us with a monthly donation and help us continue our activities. [[Become a backer](https://opencollective.com/vim-lsp#backer)]
-
-<a href="https://opencollective.com/vim-lsp/backer/0/website" target="_blank"><img src="https://opencollective.com/vim-lsp/backer/0/avatar.svg"></a>
-<a href="https://opencollective.com/vim-lsp/backer/1/website" target="_blank"><img src="https://opencollective.com/vim-lsp/backer/1/avatar.svg"></a>
-<a href="https://opencollective.com/vim-lsp/backer/2/website" target="_blank"><img src="https://opencollective.com/vim-lsp/backer/2/avatar.svg"></a>
-<a href="https://opencollective.com/vim-lsp/backer/3/website" target="_blank"><img src="https://opencollective.com/vim-lsp/backer/3/avatar.svg"></a>
-<a href="https://opencollective.com/vim-lsp/backer/4/website" target="_blank"><img src="https://opencollective.com/vim-lsp/backer/4/avatar.svg"></a>
- <a href="https://opencollective.com/vim-lsp/backer/5/website" target="_blank"><img src="https://opencollective.com/vim-lsp/backer/5/avatar.svg"></a>
-  <a href="https://opencollective.com/vim-lsp/backer/6/website" target="_blank"><img src="https://opencollective.com/vim-lsp/backer/6/avatar.svg"></a>
-  <a href="https://opencollective.com/vim-lsp/backer/7/website" target="_blank"><img src="https://opencollective.com/vim-lsp/backer/7/avatar.svg"></a>
-  <a href="https://opencollective.com/vim-lsp/backer/8/website" target="_blank"><img src="https://opencollective.com/vim-lsp/backer/8/avatar.svg"></a>
-  <a href="https://opencollective.com/vim-lsp/backer/9/website" target="_blank"><img src="https://opencollective.com/vim-lsp/backer/9/avatar.svg"></a>
-  <a href="https://opencollective.com/vim-lsp/backer/10/website" target="_blank"><img src="https://opencollective.com/vim-lsp/backer/10/avatar.svg"></a>
-  <a href="https://opencollective.com/vim-lsp/backer/11/website" target="_blank"><img src="https://opencollective.com/vim-lsp/backer/11/avatar.svg"></a>
-  <a href="https://opencollective.com/vim-lsp/backer/12/website" target="_blank"><img src="https://opencollective.com/vim-lsp/backer/12/avatar.svg"></a>
-  <a href="https://opencollective.com/vim-lsp/backer/13/website" target="_blank"><img src="https://opencollective.com/vim-lsp/backer/13/avatar.svg"></a>
-  <a href="https://opencollective.com/vim-lsp/backer/14/website" target="_blank"><img src="https://opencollective.com/vim-lsp/backer/14/avatar.svg"></a>
-
-
-## Sponsors
-
-Become a sponsor and get your logo on our README on GitHub with a link to your site. [[Become a sponsor](https://opencollective.com/vim-lsp#sponsor)]
-
-<a href="https://opencollective.com/vim-lsp/sponsor/0/website" target="_blank"><img src="https://opencollective.com/vim-lsp/sponsor/0/avatar.svg"></a>
-<a href="https://opencollective.com/vim-lsp/sponsor/1/website" target="_blank"><img src="https://opencollective.com/vim-lsp/sponsor/1/avatar.svg"></a>
-<a href="https://opencollective.com/vim-lsp/sponsor/2/website" target="_blank"><img src="https://opencollective.com/vim-lsp/sponsor/2/avatar.svg"></a>
-<a href="https://opencollective.com/vim-lsp/sponsor/3/website" target="_blank"><img src="https://opencollective.com/vim-lsp/sponsor/3/avatar.svg"></a>
-<a href="https://opencollective.com/vim-lsp/sponsor/4/website" target="_blank"><img src="https://opencollective.com/vim-lsp/sponsor/4/avatar.svg"></a>
- <a href="https://opencollective.com/vim-lsp/sponsor/5/website" target="_blank"><img src="https://opencollective.com/vim-lsp/sponsor/5/avatar.svg"></a>
-  <a href="https://opencollective.com/vim-lsp/sponsor/6/website" target="_blank"><img src="https://opencollective.com/vim-lsp/sponsor/6/avatar.svg"></a>
-  <a href="https://opencollective.com/vim-lsp/sponsor/7/website" target="_blank"><img src="https://opencollective.com/vim-lsp/sponsor/7/avatar.svg"></a>
-  <a href="https://opencollective.com/vim-lsp/sponsor/8/website" target="_blank"><img src="https://opencollective.com/vim-lsp/sponsor/8/avatar.svg"></a>
-  <a href="https://opencollective.com/vim-lsp/sponsor/9/website" target="_blank"><img src="https://opencollective.com/vim-lsp/sponsor/9/avatar.svg"></a>
-  <a href="https://opencollective.com/vim-lsp/sponsor/10/website" target="_blank"><img src="https://opencollective.com/vim-lsp/sponsor/10/avatar.svg"></a>
-  <a href="https://opencollective.com/vim-lsp/sponsor/11/website" target="_blank"><img src="https://opencollective.com/vim-lsp/sponsor/11/avatar.svg"></a>
-  <a href="https://opencollective.com/vim-lsp/sponsor/12/website" target="_blank"><img src="https://opencollective.com/vim-lsp/sponsor/12/avatar.svg"></a>
-  <a href="https://opencollective.com/vim-lsp/sponsor/13/website" target="_blank"><img src="https://opencollective.com/vim-lsp/sponsor/13/avatar.svg"></a>
-  <a href="https://opencollective.com/vim-lsp/sponsor/14/website" target="_blank"><img src="https://opencollective.com/vim-lsp/sponsor/14/avatar.svg"></a>
-
